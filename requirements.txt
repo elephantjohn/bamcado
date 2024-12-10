@@ -1,0 +1,14 @@
+# fastapi依赖
+executing==2.0.1
+asttokens==2.4.1
+six==1.16.0
+blinker>=1.6.2
+fastapi==0.111.0
+
+# langchain依赖
+langchain==0.2.7
+langchain_community==0.2.7
+
+loguru==0.7.2
+
+zhipuai==2.1.2
