@@ -2,8 +2,9 @@
 
 bamcado-chat项目的后端服务，负责处理业务逻辑、数据存储和API接口的提供。采用稳健的后端技术，确保服务的稳定性和可扩展性。
 
-## 版本：v1.0
-
+## 阶段性成果展示
+### 用langchain和fastapi实现对话
+![langchain和fastapi对话过程](./imgs/rag_langchain_fastapi.jpg)
 
 ## 介绍
 
@@ -45,3 +46,4 @@ Content-Type: application/json
     "max_tokens":4096
 }
 ```
+
