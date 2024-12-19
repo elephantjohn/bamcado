@@ -164,7 +164,7 @@ class BM25Retriever(BaseRetriever):
     def __init__(self, config):
         super().__init__(config)
         from pyserini.search.lucene import LuceneSearcher
-        self.searcher = LuceneSearcher("/home/00_rag/temp/bamcado/server/indexes")
+        self.searcher = LuceneSearcher("/root/work/RAG/bamcad-chat-api/server")
         self.contain_doc = self._check_contain_doc()
         if not self.contain_doc:
             self.corpus = load_corpus(self.corpus_path)
@@ -221,9 +221,9 @@ class BM25Retriever(BaseRetriever):
 
 # 定义检索器配置
 retriever_config = {
-    'data_dir': '/home/00_rag/temp/bamcado/server/dataset/',
-    'index_path': '/home/00_rag/temp/bamcado/server/indexes/e5_flat_sample.index',
-    'corpus_path': '/home/00_rag/temp/bamcado/server/indexes/sample_data.jsonl',
+    'data_dir': '/home/00_rag/temp/bamcad-chat-api/server/dataset/',
+    'index_path': '/home/00_rag/temp/bamcad-chat-api/server/indexes/e5_flat_sample.index',
+    'corpus_path': '/home/00_rag/temp/bamcad-chat-api/server/indexes/sample_data.jsonl',
     'device': 'cpu',
     'save_retrieval_cache': True,
     'retrieval_method': 'bm25',

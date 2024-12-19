@@ -83,20 +83,28 @@ def get_ChatOpenAI(
     :return: ChatOpenAI 实例
     """
     # 首先，你要判断当前加载的是哪个模型
+    logging.basicConfig(filename='program.log', level=logging.DEBUG,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+    logging.debug(f'model_name:  {model_name}')
+    logging.debug(f'temperature:  {temperature}')
     config = get_model_worker_config(model_name)
     ChatOpenAI._get_encoding_model = MinxChatOpenAI.get_encoding_model
-    model = ChatOpenAI(
-        streaming=streaming,
-        verbose=verbose,
-        callbacks=callbacks,
-        openai_api_key=config.get("api_key", "EMPTY"),
-        openai_api_base=config.get("api_base_url", fschat_openai_api_address()),
-        model_name=model_name,
-        temperature=temperature,
-        max_tokens=max_tokens,
-        openai_proxy=config.get("openai_proxy"),
-        **kwargs
-    )
+    try:
+        model = ChatOpenAI(
+            streaming=streaming,
+            verbose=verbose,
+            callbacks=callbacks,
+            openai_api_key=config.get("api_key", "EMPTY"),
+            openai_api_base=config.get("api_base_url", fschat_openai_api_address()),
+            model_name=model_name,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            openai_proxy=config.get("openai_proxy"),
+            **kwargs
+        )
+    except Exception as e:
+        logging.error(f"Error instantiating ChatOpenAI: {e}")
+        raise
     return model
     
 
@@ -105,7 +113,7 @@ def get_model_worker_config(model_name: str = None) -> dict:
     """
 
     :param model_name:
-    :return: 在线模型:{'model_path_exists': True, 'model_path': '/home/00_rag/model/ZhipuAI/chatglm3-6b'}
+    :return: 在线模型:{'model_path_exists': True, 'model_path': '/root/work/RAG/resources/chatglm3-6b'}
 
     """
 
@@ -293,7 +301,7 @@ def get_model_path(model_name: str, type: str = None) -> Optional[str]:
         for v in MODEL_PATH.values():
             paths.update(v)
     if model_name == "bge-large-zh-v1.5":
-        return "/home/00_rag/model/AI-ModelScope/bge-large-zh-v1___5"
+        return "/root/work/RAG/resources/bge-large-zh-v1.5"
 
     if path_str := paths.get(model_name):  # 以 "chatglm-6b": "THUDM/chatglm-6b-new" 为例，以下都是支持的路径
         path = Path(path_str)
@@ -445,8 +453,8 @@ if __name__ == '__main__':
     # 测试本地model的config加载参数
     # ans = get_model_worker_config("chatglm3-6b")
     # print(ans)
-    # {'host': '192.168.110.131', 'port': 20002, 'device': 'cuda', 'model_path_exists': True,
-    # 'model_path': '/home/00_rag/model/ZhipuAI/chatglm3-6b'}
+    # {'host': '127.0.0.1', 'port': 20002, 'device': 'cuda', 'model_path_exists': True,
+    # 'model_path': '/home/xx/chatglm3-6b'}
 
     # 测试加载在线模型
     ans = get_model_worker_config("zhipu-api")

@@ -3,27 +3,16 @@ from sqlalchemy.future import select
 from server.db.session import with_async_session, async_session_scope
 
 @with_async_session
-async def add_kb_to_db(session, kb_name, kb_info, vs_type, embed_model, user_id):
-    # 查询现有知识库实例
-    kb = await session.execute(
-        select(KnowledgeBaseModel)
-        .where(KnowledgeBaseModel.kb_name.ilike(kb_name))
-    )
-    kb = kb.scalars().first()
-
+async def add_kb_to_db(session, kb_name, kb_info, vs_type, embed_model):
+    # 创建知识库实例
+    kb = session.query(KnowledgeBaseModel).filter(KnowledgeBaseModel.kb_name.ilike(kb_name)).first()
     if not kb:
-        # 创建新的知识库实例
-        kb = KnowledgeBaseModel(kb_name=kb_name, kb_info=kb_info, vs_type=vs_type, embed_model=embed_model, user_id=user_id)
+        kb = KnowledgeBaseModel(kb_name=kb_name, kb_info=kb_info, vs_type=vs_type, embed_model=embed_model)
         session.add(kb)
-    else:
-        # 更新现有知识库实例
+    else:  # update kb with new vs_type and embed_model
         kb.kb_info = kb_info
         kb.vs_type = vs_type
         kb.embed_model = embed_model
-        kb.user_id = user_id
-
-    # 异步提交数据库事务
-    await session.commit()
     return True
 
 
