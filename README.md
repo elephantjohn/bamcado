@@ -7,6 +7,9 @@ bamcado-chat项目的后端服务，负责处理业务逻辑、数据存储和AP
 ### 实现类似于Chat-GPT的交互式问答
 ![实现类似于Chat-GPT的交互式问答](./imgs/ChatGPT-ui.jpg)
 
+### 支持设置对话参数
+![ui界面设置对话参数](./imgs/ui-settins.jpg)
+
 ### 用langchain和fastapi实现RAG
 ![langchain和fastapi实现RAG](./imgs/rag_langchain_fastapi.jpg)
 
