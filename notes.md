@@ -33,4 +33,56 @@ processes["online_api"][model_name] = process    func: run_model_worker
 返回的值返回给前端，即/api/chat处，由前端处理；
 
 
+###### 前端逻辑
+ ```javascript
+async function h(b) {
+  // 检查用户输入的消息内容是否为空，如果是空白字符串，则直接返回，不进行后续操作
+  if (!b.trim()) return;
 
+  // 创建一个新的消息对象 d，包含以下属性：
+  const d = {
+    id: "",                  // 消息的唯一标识符，初始为空字符串，等待后续从后端获取
+    conversation_id: s,      // 当前会话的 ID，变量 s 在组件中保存了当前会话的标识
+    chat_type: "",           // 聊天类型，初始为空字符串，可以根据实际需求填写
+    query: b,                // 用户输入的消息内容，即函数参数 b
+    response: "",            // 系统的回复内容，初始为空字符串，等待后续接收系统回复
+    create_time: ""          // 消息创建时间，初始为空字符串，后续可从后端获取
+  };
+
+  // 将新创建的消息对象添加到消息列表 i.value 中
+  i.value.push(d);
+
+  // 调用 u() 函数，通常用于界面更新，例如将聊天窗口滚动到底部，确保最新消息可见
+  u();
+
+  // 创建一个请求对象 g，包含以下属性：
+  const g = {
+    query: b,                // 用户输入的消息内容
+    conversation_id: s,      // 当前会话的 ID，与之前相同
+    conversation_name: n,    // 当前会话的名称，变量 n 保存了会话名称
+    history: []              // 历史记录，初始为空数组，可根据需要添加之前的对话内容
+  };
+
+  // 调用 e.chat 函数，将请求对象 g 发送到后端，并设置消息接收的回调函数
+  e.chat(g, {
+    onmessage: async m => {
+      // 从后端接收到的数据 m.data 中解析出消息内容
+      const y = JSON.parse(m.data);
+
+      // 遍历消息列表 i.value，找到与当前消息对应的消息对象 v
+      i.value.map(async v => {
+        // 如果消息的 id 与后端返回的消息 id 匹配，或者初始的 id 为空字符串
+        if (y && (v.id === y.message_id || v.id === "") && y.text) {
+          // 将后端返回的文本 y.text 累加到消息对象 v 的 response 属性中，形成完整的回复
+          v.response += y.text;
+          // 更新消息对象的 id，为后端返回的唯一消息标识符
+          v.id = y.message_id;
+        }
+      });
+
+      // 再次调用 u() 函数，更新界面显示，确保最新的回复内容可见
+      u();
+    }
+  });
+}
+```
