@@ -86,3 +86,29 @@ async function h(b) {
   });
 }
 ```
+###### mysql 
+```
+
+class UserInfo(Base):
+    __tablename__ = "user_account"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(30))
+    fullname: Mapped[Optional[str]] = mapped_column(String(255))
+    addresses: Mapped[List["Address"]] = relationship(
+        "Address", back_populates="user", cascade="all, delete-orphan"
+    )
+
+    def __repr__(self) -> str:
+        return f"UserInfo(id={self.id!r}, name={self.name!r}, fullname={self.fullname!r})"
+
+SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{username}:{password_encoded}@{hostname}/{database_name}?charset=utf8mb4"
+
+from sqlalchemy import create_engine
+
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URI,
+    echo=True
+)
+ 创建所有表
+Base.metadata.create_all(engine)
+```
